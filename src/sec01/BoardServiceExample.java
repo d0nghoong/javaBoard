@@ -15,6 +15,7 @@ public class BoardServiceExample {
 		while(true) {
 		System.out.println("선택: ");
 		number=scanner.nextInt();
+		scanner.nextLine();
 		
 		switch(number) { 
 		case 1:bse.print(); break;

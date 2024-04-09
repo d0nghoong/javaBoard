@@ -1,25 +1,22 @@
-package sec01;
-
-import java.io.*;
-import java.util.*;
-
-public class BoardService {
-	
+package test2;
 
 import java.util.*;
 import java.io.*;                                                                                                                                                   
 
 public class BoardService {
 int pno=1;
-	
+Scanner scanner=new Scanner(System.in);
+List<Board> iList=new ArrayList();
+
 	public void print() {
 		System.out.println("----------");
 		System.out.println("1.목록보기 | 2.상세보기 | 3.글쓰기 | 4.삭제하기 | 5.종료 ");
 		System.out.println("----------");
 	}
 	
-	public void seeDeep() throws Exception {
-		InputStream fis=new FileInputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\Project\\tis.db");
+	public void seeDeep(){
+		try {
+		InputStream fis=new FileInputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\test2\\tis.db");
 		ObjectInputStream ois=new ObjectInputStream(fis);
 		
 		List<Board> list=(List<Board>)ois.readObject();
@@ -30,34 +27,34 @@ int pno=1;
 			
 		}
 
+	}catch(Exception e) {System.out.println("에러 발생");}
 	}
 	
 	public void write(){
 		
 		try {
 			Board board=new Board();
-			Scanner scanner=new Scanner(System.in);
-			List<Board> iList=new ArrayList();
 			
-			board.pno=pno++;
+			board.setPno(pno++);
 			
 			System.out.println("이름을 입력하십시오: ");
-			board.name= scanner.nextLine();
+			board.setName(scanner.nextLine()); 
 			
 			System.out.println("가격을 입력하십시오: ");
-			board.price=scanner.nextInt();
+			board.setPrice(Integer.parseInt(scanner.nextLine()));
 			
 			System.out.println("재고량을 입력하십시오: ");
-			board.stock=scanner.nextInt();
+			board.setStock(Integer.parseInt(scanner.nextLine()));
 			
 			iList.add(board);
 			
-			FileOutputStream fos=new FileOutputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\Project\\tis.db");
+			FileOutputStream fos=new FileOutputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\test2\\tis.db");
 			ObjectOutputStream oos=new ObjectOutputStream(fos);
 			
 			oos.writeObject(iList);
-			oos.flush();
+			oos.flush();  
 			oos.close();
+			
 			
 		} catch(Exception e) {
 			System.out.println("에러 발생");
@@ -68,34 +65,36 @@ int pno=1;
 	
 	public void delete(){
 		try {
-		InputStream fis=new FileInputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\Project\\tis.db");
+		InputStream fis=new FileInputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\test2\\tis.db");
 		ObjectInputStream ois=new ObjectInputStream(fis);
 		
 		List<Board> list=(List<Board>)ois.readObject();
-		Scanner scanner=new Scanner(System.in);
-		String name;
-		int n=-1;
-		
-		System.out.println("삭제하고 싶은 물품의 상품명을 작성하십시오:");
-		name=scanner.nextLine();
+		int number;
+	
+		System.out.println("삭제하고 싶은 물품의 상품 번호를 입력하시오:");
+		number=scanner.nextInt();
+		scanner.nextLine();
 		
 		Iterator<Board> iter=list.iterator();
 		while(iter.hasNext()) {
 			Board board=iter.next();
-			if(board.getName().equals(name)) n=board.getPno();
-		
-		if(n==-1) {
-			System.out.println("상품명이 잘못 되었습니다");
-			return;
-		}
-		
-		iter.remove();
+			if(board.getPno()==number) {
+				iter.remove();
+				FileOutputStream fos=new FileOutputStream("C:\\Users\\이동형\\Desktop\\backend\\java\\eclipse_workspace\\test2\\tis.db");
+				ObjectOutputStream oos=new ObjectOutputStream(fos);
+				
+				oos.writeObject(list);
+				oos.flush();  
+				oos.close();
+				return;
 			}
+			
+		}
+		System.out.println("상품 번호가 잘못 되었습니다");
+		return;
 		}
 	catch(Exception e) {System.out.println("에러발생");	
 
 }
 	}
 	}
-
-	
